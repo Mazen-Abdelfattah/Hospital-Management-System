@@ -89,7 +89,7 @@ CREATE TABLE Room
     room_id    INT PRIMARY KEY IDENTITY,
     room_type  VARCHAR(100) NOT NULL, --(Single, Double)
     location   INT
---     nurse_id   INT          NOT NULL,
+
 
 );
 
