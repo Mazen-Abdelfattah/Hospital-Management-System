@@ -1,5 +1,7 @@
-CREATE DATABASE HospitalManagementSystem
 
+
+-- CREATE DATABASE HospitalManagementSystem
+--
 
 USE HospitalManagementSystem
 
@@ -24,7 +26,6 @@ CREATE TABLE Patient
 (
     patient_id              INT PRIMARY KEY IDENTITY,
     name                    VARCHAR(30)   NOT NULL,
-    age                     DECIMAL(3, 1) NOT NULL,
     gender                  CHAR(1)       NOT NULL,
     date_of_birth           DATE          NOT NULL,
     address                 VARCHAR(30)   NOT NULL,
@@ -32,10 +33,7 @@ CREATE TABLE Patient
     emergency_contact_name  VARCHAR(30)   NOT NULL,
     emergency_contact_phone VARCHAR(30)   NOT NULL,
     insurance_information   VARCHAR(30)   NOT NULL,
-    admin_id                INT,
-    medication_id           INT,
-    FOREIGN KEY (medication_id) REFERENCES Medication (medication_id),
-    FOREIGN KEY (admin_id) REFERENCES Admin (admin_id),
+
 );
 
 CREATE TABLE Doctor
@@ -90,10 +88,9 @@ CREATE TABLE Room
 (
     room_id    INT PRIMARY KEY IDENTITY,
     room_type  VARCHAR(100) NOT NULL, --(Single, Double)
-    nurse_id   INT          NOT NULL,
-    patient_id INT          NOT NULL,
-    FOREIGN KEY (nurse_id) REFERENCES Nurse (nurse_id),
-    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id),
+    location   INT
+--     nurse_id   INT          NOT NULL,
+
 );
 
 CREATE TABLE PatientDiagnosis
@@ -119,7 +116,7 @@ CREATE TABLE PatientMedication
     FOREIGN KEY (medication_id) REFERENCES Medication (medication_id) ON DELETE CASCADE
 );
 
---===========================================================================================================
+-- ===========================================================================================================
 
 
 INSERT INTO Admin (username, password, name)
@@ -168,49 +165,46 @@ VALUES
 ('Montelukast', 'Montelukast is used to prevent wheezing, difficulty breathing, chest tightness, and coughing caused by asthma.', '10mg tablets, take 1 tablet daily in the evening.');
 
 
-INSERT INTO Patient (name, age, gender, date_of_birth, address, phone_number, emergency_contact_name,
-                     emergency_contact_phone, insurance_information, admin_id, medication_id)
-VALUES ('Alice Johnson', 45, 'F', '1979-05-15', '123 Main St', '555-1234', 'John Johnson', '555-5678',
-        'Insurance Company A', 1, 21),
-       ('Bob Smith', 32, 'M', '1992-10-20', '456 Oak St', '555-2345', 'Sarah Smith', '555-6789', 'Insurance Company B',
-        1, 22),
-       ('Carol Williams', 50, 'F', '1974-03-10', '789 Elm St', '555-3456', 'David Williams', '555-7890',
-        'Insurance Company C', 2, 23),
-       ('David Brown', 28, 'M', '1996-08-25', '321 Pine St', '555-4567', 'Mary Brown', '555-8901',
-        'Insurance Company D', 2, 20),
-       ('Emma Davis', 60, 'F', '1962-06-05', '654 Cedar St', '555-5678', 'James Davis', '555-9012',
-        'Insurance Company E', 3, 5),
-       ('Frank Wilson', 35, 'M', '1989-01-30', '987 Birch St', '555-6789', 'Karen Wilson', '555-0123',
-        'Insurance Company F', 3, 6),
-       ('Grace Anderson', 42, 'F', '1982-09-20', '852 Maple St', '555-7890', 'Michael Anderson', '555-1234',
-        'Insurance Company G', 4, 7),
-       ('Henry Martinez', 55, 'M', '1969-12-15', '741 Pine St', '555-8901', 'Jennifer Martinez', '555-2345',
-        'Insurance Company H', 4, 8),
-       ('Isabel Jackson', 48, 'F', '1976-04-25', '369 Oak St', '555-9012', 'Robert Jackson', '555-3456',
-        'Insurance Company I', 5, 9),
-       ('Jack Thompson', 37, 'M', '1987-07-15', '963 Elm St', '555-0123', 'Amanda Thompson', '555-4567',
-        'Insurance Company J', 5, 10),
-       ('Kate White', 29, 'F', '1995-02-10', '147 Cedar St', '555-1234', 'Thomas White', '555-5678',
-        'Insurance Company K', 6, 11),
-       ('Liam Harris', 33, 'M', '1989-11-05', '258 Birch St', '555-2345', 'Jessica Harris', '555-6789',
-        'Insurance Company L', 6, 12),
-       ('Mia Young', 47, 'F', '1977-08-30', '753 Maple St', '555-3456', 'William Young', '555-7890',
-        'Insurance Company M', 7, 13),
-       ('Noah Clark', 51, 'M', '1973-01-20', '159 Pine St', '555-4567', 'Rebecca Clark', '555-8901',
-        'Insurance Company N', 7, 14),
-       ('Olivia Rodriguez', 39, 'F', '1983-07-10', '357 Oak St', '555-5678', 'Richard Rodriguez', '555-9012',
-        'Insurance Company O', 8, 15),
-       ('Peter Garcia', 44, 'M', '1978-11-25', '852 Cedar St', '555-6789', 'Nancy Garcia', '555-0123',
-        'Insurance Company P', 8, 16),
-       ('Rachel Lee', 36, 'F', '1986-03-15', '963 Elm St', '555-7890', 'Christopher Lee', '555-2345',
-        'Insurance Company Q', 9, 17),
-       ('Samuel Martinez', 57, 'M', '1965-10-05', '357 Pine St', '555-8901', 'Laura Martinez', '555-3456',
-        'Insurance Company R', 9, 18),
-       ('Taylor King', 41, 'F', '1981-05-20', '753 Oak St', '555-9012', 'Daniel King', '555-4567',
-        'Insurance Company S', 10, 19),
-       ('William Taylor', 30, 'M', '1992-04-10', '852 Maple St', '555-0123', 'Melissa Taylor', '555-5678',
-        'Insurance Company T', 10, 20);
-
+INSERT INTO Patient (name, gender, date_of_birth, address, phone_number, emergency_contact_name, emergency_contact_phone, insurance_information)
+VALUES ('Alice Johnson', 'F', '1979-05-15', '123 Main St', '555-1234', 'John Johnson', '555-5678',
+        'Insurance Company A'),
+       ('Bob Smith', 'M', '1992-10-20', '456 Oak St', '555-2345', 'Sarah Smith', '555-6789', 'Insurance Company B'),
+       ('Carol Williams', 'F', '1974-03-10', '789 Elm St', '555-3456', 'David Williams', '555-7890',
+        'Insurance Company C'),
+       ('David Brown', 'M', '1996-08-25', '321 Pine St', '555-4567', 'Mary Brown', '555-8901',
+        'Insurance Company D'),
+       ('Emma Davis', 'F', '1962-06-05', '654 Cedar St', '555-5678', 'James Davis', '555-9012',
+        'Insurance Company E'),
+       ('Frank Wilson', 'M', '1989-01-30', '987 Birch St', '555-6789', 'Karen Wilson', '555-0123',
+        'Insurance Company F'),
+       ('Grace Anderson', 'F', '1982-09-20', '852 Maple St', '555-7890', 'Michael Anderson', '555-1234',
+        'Insurance Company G'),
+       ('Henry Martinez', 'M', '1969-12-15', '741 Pine St', '555-8901', 'Jennifer Martinez', '555-2345',
+        'Insurance Company H'),
+       ('Isabel Jackson', 'F', '1976-04-25', '369 Oak St', '555-9012', 'Robert Jackson', '555-3456',
+        'Insurance Company I'),
+       ('Jack Thompson', 'M', '1987-07-15', '963 Elm St', '555-0123', 'Amanda Thompson', '555-4567',
+        'Insurance Company J'),
+       ('Kate White',  'F', '1995-02-10', '147 Cedar St', '555-1234', 'Thomas White', '555-5678',
+        'Insurance Company K'),
+       ('Liam Harris','M', '1989-11-05', '258 Birch St', '555-2345', 'Jessica Harris', '555-6789',
+        'Insurance Company L'),
+       ('Mia Young', 'F', '1977-08-30', '753 Maple St', '555-3456', 'William Young', '555-7890',
+        'Insurance Company M'),
+       ('Noah Clark',  'M', '1973-01-20', '159 Pine St', '555-4567', 'Rebecca Clark', '555-8901',
+        'Insurance Company N'),
+       ('Olivia Rodriguez', 'F', '1983-07-10', '357 Oak St', '555-5678', 'Richard Rodriguez', '555-9012',
+        'Insurance Company O'),
+       ('Peter Garcia',  'M', '1978-11-25', '852 Cedar St', '555-6789', 'Nancy Garcia', '555-0123',
+        'Insurance Company P'),
+       ('Rachel Lee',  'F', '1986-03-15', '963 Elm St', '555-7890', 'Christopher Lee', '555-2345',
+        'Insurance Company Q'),
+       ('Samuel Martinez',  'M', '1965-10-05', '357 Pine St', '555-8901', 'Laura Martinez', '555-3456',
+        'Insurance Company R'),
+       ('Taylor King', 'F', '1981-05-20', '753 Oak St', '555-9012', 'Daniel King', '555-4567',
+        'Insurance Company S'),
+       ('William Taylor',  'M', '1992-04-10', '852 Maple St', '555-0123', 'Melissa Taylor', '555-5678',
+        'Insurance Company T');
 
 INSERT INTO Doctor (name, department, Specialty, years_of_experience)
 VALUES ('Dr. David Lee', 'Cardiology', 'Cardiologist', 15),
@@ -261,8 +255,8 @@ VALUES
 
 INSERT INTO Appointment (appointment_time, appointment_date, patient_id, doctor_id, reason_for_visit)
 VALUES
-('09:00:00', '2024-05-15', 21, 1, 'Annual checkup'),
-('10:30:00', '2024-05-15', 22, 2, 'Headache and dizziness'),
+('09:00:00', '2024-05-15', 1, 1, 'Annual checkup'),
+('10:30:00', '2024-05-15', 2, 2, 'Headache and dizziness'),
 ('11:45:00', '2024-05-16', 3, 3, 'Knee pain'),
 ('13:30:00', '2024-05-16', 20, 4, 'Stomach ache'),
 ('14:45:00', '2024-05-17', 5, 5, 'Skin rash'),
@@ -309,8 +303,7 @@ VALUES
 
 INSERT INTO Diagnosis (DiagnosisDate, DiagnosisCode, Description, patient_id, doctor_id)
 VALUES
-('2024-05-01', 12345, 'Common Cold', 21, 1),
-('2024-05-05', 23456, 'Influenza', 22, 2),
+
 ('2024-05-10', 34567, 'Bronchitis', 3, 3),
 ('2024-05-15', 45678, 'Pneumonia', 4, 4),
 ('2024-05-20', 56789, 'Sinusitis', 5, 5),
@@ -331,34 +324,34 @@ VALUES
 ('2024-08-05', 23459, 'Hypothyroidism', 20, 20);
 
 
-INSERT INTO Room (room_type, nurse_id, patient_id)
+INSERT INTO Room (room_type,location)
 VALUES
-('Single', 1, 21),
-('Double', 2, 22),
-('Single', 3, 3),
-('Double', 4, 4),
-('Single', 5, 5),
-('Double', 6, 6),
-('Single', 7, 7),
-('Double', 8, 8),
-('Single', 9, 9),
-('Double', 10, 10),
-('Single', 11, 11),
-('Double', 12, 12),
-('Single', 13, 13),
-('Double', 14, 14),
-('Single', 15, 15),
-('Double', 16, 16),
-('Single', 17, 17),
-('Double', 18, 18),
-('Single', 19, 19),
-('Double', 20, 20);
+('Single', 1),
+('Double', 2),
+('Single', 3),
+('Double', 4),
+('Single', 5),
+('Double', 6),
+('Single', 7),
+('Double', 8),
+('Single', 9),
+('Double', 10),
+('Single', 11),
+('Double', 12),
+('Single', 13),
+('Double', 14),
+('Single', 15),
+('Double', 16),
+('Single', 17),
+('Double', 18),
+('Single', 19),
+('Double', 20);
 
 
 INSERT INTO PatientDiagnosis (patient_id, doctor_id, diagnosis_id)
 VALUES
-(21, 1, 21),
-(22, 2, 2),
+(1, 1, 21),
+(2, 2, 2),
 (3, 3, 3),
 (4, 4, 4),
 (5, 5, 5),
@@ -381,8 +374,7 @@ VALUES
 
 INSERT INTO PatientMedication (patient_id, medication_id, Dosage, StartDate, EndDate)
 VALUES
-(21, 21, '1 tablet daily', '2024-05-01', '2024-05-15'),
-(22, 22, '2 tablets daily', '2024-05-02', '2024-05-16'),
+
 (3, 23, '1 tablet twice daily', '2024-05-03', '2024-05-17'),
 (4, 20, '1 tablet daily', '2024-05-04', '2024-05-18'),
 (5, 5, '1 tablet daily', '2024-05-05', '2024-05-19'),
