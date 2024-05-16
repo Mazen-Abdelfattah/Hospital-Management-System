@@ -1,7 +1,7 @@
 
 
 -- CREATE DATABASE HospitalManagementSystem
---
+
 
 USE HospitalManagementSystem
 
@@ -350,7 +350,7 @@ VALUES
 
 INSERT INTO PatientDiagnosis (patient_id, doctor_id, diagnosis_id)
 VALUES
-(1, 1, 21),
+(1, 1, 1),
 (2, 2, 2),
 (3, 3, 3),
 (4, 4, 4),
@@ -367,16 +367,14 @@ VALUES
 (15, 15, 15),
 (16, 16, 16),
 (17, 17, 17),
-(18, 18, 18),
-(19, 19, 19),
-(20, 20, 20);
+(18, 18, 18);
 
 
 INSERT INTO PatientMedication (patient_id, medication_id, Dosage, StartDate, EndDate)
 VALUES
 
-(3, 23, '1 tablet twice daily', '2024-05-03', '2024-05-17'),
-(4, 20, '1 tablet daily', '2024-05-04', '2024-05-18'),
+(3, 3, '1 tablet twice daily', '2024-05-03', '2024-05-17'),
+(4, 1, '1 tablet daily', '2024-05-04', '2024-05-18'),
 (5, 5, '1 tablet daily', '2024-05-05', '2024-05-19'),
 (6, 6, '1 capsule three times daily', '2024-05-06', '2024-05-20'),
 (7, 7, '1 capsule daily before breakfast', '2024-05-07', '2024-05-21'),
@@ -391,8 +389,8 @@ VALUES
 (16, 16, '1 tablet daily', '2024-05-16', '2024-05-30'),
 (17, 17, '1 tablet daily', '2024-05-17', '2024-06-01'),
 (18, 18, '1 tablet daily in the morning', '2024-05-18', '2024-06-02'),
-(19, 19, '1 tablet daily', '2024-05-19', '2024-06-03'),
-(20, 20, '1 tablet daily', '2024-05-20', '2024-06-04');
+(19, 2, '1 tablet daily', '2024-05-19', '2024-06-03'),
+(20, 4, '1 tablet daily', '2024-05-20', '2024-06-04');
 
 
 -- SELECT @@SERVERNAME
