@@ -88,9 +88,9 @@ CREATE TABLE Room
 (
     room_id    INT PRIMARY KEY IDENTITY,
     room_type  VARCHAR(100) NOT NULL, --(Single, Double)
-    location   INT
-
-
+    location   INT,
+    patient_id int,
+    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id),
 );
 
 CREATE TABLE PatientDiagnosis
