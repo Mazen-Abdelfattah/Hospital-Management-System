@@ -2,7 +2,8 @@ import pyodbc as odbc # pip install pyodbc     #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 import sys
 import bcrypt
 from dateutil import parser
-from datetime import datetime, date
+from datetime import datetime
+from datetime import date
 
 DRIVER_NAME = 'SQL Server'
 SERVER_NAME = 'LAPTOP-7R329VJ2'
@@ -273,7 +274,7 @@ def doctor_actions():
             mid=input ("Please enter medication id: ")
             mid=int(mid)
             enddate = input("Enter a end date (YYYY-MM-DD): ")
-            startdate=date.today()
+            startdate = datetime.today().date()
             d=input("please enter dosage: ")
             while True:
                 flag=False
@@ -625,9 +626,9 @@ def nurse_actions(): #Youssef
         print("1. Show all rooms")
         print("2. Show rooms with certain criteria (room_id, specefic patient, ...)")
         print("3. Close the application.")
-        
+
         choice = input("enter your choice: ")
-        
+
         if choice == '1':
             all_rooms()
         elif choice == '2':
