@@ -71,40 +71,34 @@ cursor = conn.cursor()
 
 
 def patient_actions():  # Salma
+    print("Choose:")
+    print("1. Sign UP")
+    print("2. Log IN")
+    print("3. Exit")
 
     while True:
-        print("Choose:")
-        print("1. Sign UP")
-        print("2. Log IN")
-        print("3. Exit")
         ch = input("Enter your choice: ")
         if ch == '1':
             n = input("Enter your Full Name: ")
             g = input("Enter your Gender( F || M ): ")
             while g != 'F' and g != 'M':
                 g = input("Enter your Gender( F || M ): ")
+
+            today = datetime.now().strftime('%y-%m-%d')
             d = input("Enter your Date of birth in this format YYYY-MM-DD: ")
             while True:
                 try:
-                    valid = datetime.strptime(d, "%Y-%m-%d").date()
-                    today = datetime.now().date()
-                    if today > valid:
-                        print("valid date")
+                    vaild = parser.parse(d)
+                    if today < d:
                         break
-                    else:
-                        print("invalid or date in future. please try again.")
                 except ValueError:
-                    print("invalid format.")
-                d = input("Enter your Date of birth in this format YYYY-MM-DD: ")
+                    print("invalid format ")
+                    d = input("Enter your Date of birth in this format YYYY-MM-DD: ")
 
             a = input("Enter your Address: ")
             p = input("Enter your Phone Number: ")
             while len(p) != 7:
                 p = input("Enter your Phone Number(7 numbers): ")
-            cursor.execute(f"SELECT phone_number FROM Patient WHERE phone_number = '{p}' ")
-            if cursor.fetchone()!=None:
-                print("you have a signed up already with that phone")
-                break
             e1 = input("Enter your Emergency contact name): ")
             e2 = input("Enter your Emergency contact Phone Number: ")
             while len(p) != 7:
@@ -112,13 +106,14 @@ def patient_actions():  # Salma
             i = input("Enter your insurance information if you don't have insurance write 'no': ")
             data = (n, g, d, a, p, e1, e2, i)
             cursor.execute(f"INSERT INTO Patient(name, gender, date_of_birth, address, phone_number, emergency_contact_name, emergency_contact_phone, insurance_information) values(?, ?, ?, ?, ?, ?, ?, ?)",data)
-
+            ch = input("to log in type 2: \nto Exit type 3: ")
         elif ch == '2':
             p = input("Enter your phone number to log in: ")
             cursor.execute(f"SELECT phone_number FROM Patient WHERE phone_number = '{p}' ")
             while cursor.fetchone() == None:
+                print(cursor.fetchone())
                 p = input("please Enter your phone number that you hav signed up with: ")
-                cursor.execute(f"SELECT phone_number FROM Patient WHERE phone_number = ?", (p, ))
+                cursor.execute(f"SELECT phone_number FROM Patient WHERE phone_number = ?",(p, ))
             break
         elif ch == '3':
             print("Exiting program.")
@@ -126,7 +121,6 @@ def patient_actions():  # Salma
             sys.exit()
         else:
             print("invalid value")
-            break
     while True:
         cursor.execute(f"SELECT patient_id FROM Patient WHERE phone_number = ?", (p, ))
         login_id = cursor.fetchone()
@@ -143,22 +137,18 @@ def patient_actions():  # Salma
             di = input("Enter the Doctor ID: ")
             cursor.execute(f"SELECT doctor_id FROM Doctor WHERE doctor_id = ?", (di, ))
             while cursor.fetchone() == None:
+                print(cursor.fetchone())
                 di = input("Please Enter Valid Doctor ID: ")
                 cursor.execute(f"SELECT doctor_id FROM Doctor WHERE doctor_id = ?", (di, ))
 
             d = input("Enter your Date of Appointment you want in this format YYYY-MM-DD: ")
             while True:
                 try:
-                    valid = datetime.strptime(d, "%Y-%m-%d").date()
-                    today = datetime.now().date()
-                    if today <= valid:
-                        print("valid date")
-                        break
-                    else:
-                        print("invalid or date in past. please try again.")
+                    valid = parser.parse(d)
+                    break
                 except ValueError:
-                    print("invalid format.")
-                d = input("Enter your Date of Appointment you want in this format YYYY-MM-DD: ")
+                    print("invalid format ")
+                    d = input("Enter your Date of Appointment you want in this format YYYY-MM-DD: ")
 
             print("Enter the time of appointment you want we are available in those slots:\n")
             print("1. at 09:00\n2. at 10:00\n3. at 11:00\n")
@@ -221,11 +211,11 @@ def patient_actions():  # Salma
                 check = True
                 while check:
                     try:
-                        parser.parse(d)
+                        valid = parser.parse(d)
                         check = False
                     except ValueError:
                         print("invalid format ")
-                        d = input("Enter your Date of Appointment you want to cancel in this format YYYY-MM-DD: ")
+                        d = input("Enter your Date of Appointment you want in this format YYYY-MM-DD: ")
                 cursor.execute(f"SELECT doctor_id FROM Appointment WHERE appointment_date = '{d}'"
                                f" and patient_id='{login_id[0]}' ")
                 check = cursor.fetchone()
@@ -235,7 +225,6 @@ def patient_actions():  # Salma
             cursor.execute(f"DELETE FROM Appointment WHERE doctor_id = '{di}' and patient_id = '{login_id[0]}"
                            f"' and appointment_date = '{d}'")
             print("\nyour appointment has been canceled successfully\n")
-
         elif choice == '3':
             while True:
                 roomType = input("Do you want \n1. Single Room\n2. Double Room \n")
@@ -255,7 +244,7 @@ def patient_actions():  # Salma
                 else:
                    cursor.execute(f"UPDATE Room  SET patient_id ='{login_id[0]}' WHERE room_id='{roomId[0]}'")
                    print("Your room is assigned here Room ID ")
-                   print(roomId[0])
+                   print(roomId[0] )
                    print("and Location in the floor number ")
                    print(roomId[1])
                    break
@@ -287,6 +276,7 @@ def patient_actions():  # Salma
 #         else:
 #             print("Invalid choice. Please try again")
 #
+#
 
 def main():
     while True:
@@ -308,10 +298,10 @@ def main():
         if user_type == '3':
             patient_actions()
         # elif user_type == '4':
-        #
-        elif user_type == '5':
-            print("Exiting program.")
-            break
+        #     nurse_actions()
+        # elif user_type == '5':
+        #     print("Exiting program.")
+        #     break
         else:
             print("Invalid choice. Please try again.")
 

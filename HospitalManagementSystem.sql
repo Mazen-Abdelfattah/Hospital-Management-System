@@ -57,7 +57,7 @@ CREATE TABLE Appointment
 (
     appointment_id   INT PRIMARY KEY IDENTITY,
     appointment_time TIME,
-    appointment_date DATE,
+    appointment_date var char(100),
     patient_id       INT,
     doctor_id        INT,
     reason_for_visit VARCHAR(30),
@@ -88,7 +88,7 @@ CREATE TABLE Room
 (
     room_id    INT PRIMARY KEY IDENTITY,
     room_type  VARCHAR(100) NOT NULL, --(Single, Double)
-    location   INT,
+    location   INT
     patient_id int,
     FOREIGN KEY (patient_id) REFERENCES Patient (patient_id),
 );
@@ -109,8 +109,8 @@ CREATE TABLE PatientMedication
     patient_id    INT,
     medication_id INT,
     Dosage        VARCHAR(50),               -- Assuming Dosage includes both amount and frequency
-    StartDate     DATE,
-    EndDate       DATE,
+    StartDate     var char(100),
+    EndDate       var char(100),
     PRIMARY KEY (patient_id, medication_id), -- Composite primary key
     FOREIGN KEY (patient_id) REFERENCES Patient (patient_id),
     FOREIGN KEY (medication_id) REFERENCES Medication (medication_id) ON DELETE CASCADE
@@ -324,28 +324,28 @@ VALUES
 ('2024-08-05', 23459, 'Hypothyroidism', 20, 20);
 
 
-INSERT INTO Room (room_type,location)
+INSERT INTO Room (room_type,location,patient_id)
 VALUES
-('Single', 1),
-('Double', 2),
-('Single', 3),
-('Double', 4),
-('Single', 5),
-('Double', 6),
-('Single', 7),
-('Double', 8),
-('Single', 9),
-('Double', 10),
-('Single', 11),
-('Double', 12),
-('Single', 13),
-('Double', 14),
-('Single', 15),
-('Double', 16),
-('Single', 17),
-('Double', 18),
-('Single', 19),
-('Double', 20);
+('Single', 1, 1),
+('Double', 2, 2),
+('Single', 3, 3),
+('Double', 4, 4),
+('Single', 5, 5),
+('Double', 6, 6),
+('Single', 7, 7),
+('Double', 8, 8),
+('Single', 9, 9),
+('Double', 10, 10),
+('Single', 11, 11),
+('Double', 12, 12),
+('Single', 13, 13),
+('Double', 14, 14),
+('Single', 15, 15),
+('Double', 16, 16),
+('Single', 17, 17),
+('Double', 18, 18),
+('Single', 19, 19),
+('Double', 20, 20);
 
 
 INSERT INTO PatientDiagnosis (patient_id, doctor_id, diagnosis_id)
