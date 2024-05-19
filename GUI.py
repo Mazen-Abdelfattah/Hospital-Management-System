@@ -224,10 +224,10 @@ admin_button.place(x=335, y=200)
 patient_button = tk.Button(root, text="Patient", command=on_patient_click, font=("Helvetica", 14), padx=50, pady=10, bg="gray")
 patient_button.place(x=335, y=270)
 
-doctor_button = tk.Button(root, text="Doctor", font=("Helvetica", 14), padx=50, pady=10, bg="gray")
+doctor_button = tk.Button(root, text="Doctor", command=on_doctor_click, font=("Helvetica", 14), padx=50, pady=10, bg="gray")
 doctor_button.place(x=335, y=340)
 
-nurse_button = tk.Button(root, text="Nurse", font=("Helvetica", 14), padx=54, pady=10, bg="gray")
+nurse_button = tk.Button(root, text="Nurse", command=on_nurse_click, font=("Helvetica", 14), padx=54, pady=10, bg="gray")
 nurse_button.place(x=335, y=410)
 
 # Run the application
