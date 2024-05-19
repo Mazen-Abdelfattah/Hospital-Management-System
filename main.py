@@ -94,7 +94,7 @@ def add_patient():
     print("Patient added successfully.")
 
 
-def admin_actions(): #Habiba 
+def admin_actions():
     while True:
         print("\nAdmin's Actions:")
         print("1. Sign up as a new Admin")
@@ -159,7 +159,7 @@ def doctor_actions():
 
             # Using parameterized query to prevent SQL injection
             cursor.execute('INSERT INTO Doctor (name, department, Specialty, years_of_experience) VALUES (?, ?, ?, ?)',
-                           (name, dep, spe, yex))
+                            (name, dep, spe, yex))
             conn.commit()  # Commit the transaction after the loop
             break  
         elif choice =='2':
@@ -432,7 +432,7 @@ def doctor_actions():
 
 
 
-def patient_actions():  # Salma
+def patient_actions():  
     print("Choose:")
     print("1. Sign UP")
     print("2. Log IN")

@@ -1,9 +1,9 @@
 
 
--- CREATE DATABASE HospitalManagementSystem
+--CREATE DATABASE HospitalManagementSystem
 
 
-USE HospitalManagementSystem
+--USE HospitalManagementSystem
 
 
 CREATE TABLE Admin
@@ -57,11 +57,11 @@ CREATE TABLE Appointment
 (
     appointment_id   INT PRIMARY KEY IDENTITY,
     appointment_time TIME,
-    appointment_date var char(100),
+    appointment_date VARCHAR(100),
     patient_id       INT,
     doctor_id        INT,
     reason_for_visit VARCHAR(30),
-    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id),
+    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id) ON DELETE CASCADE,
     FOREIGN KEY (doctor_id) REFERENCES Doctor (doctor_id),
 );
 
@@ -80,7 +80,7 @@ CREATE TABLE Diagnosis
     Description   VARCHAR(100) NOT NULL,
     patient_id    INT,
     doctor_id     INT,
-    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id),
+    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id) ON DELETE CASCADE,
     FOREIGN KEY (doctor_id) REFERENCES Doctor (doctor_id),
 );
 
@@ -88,9 +88,10 @@ CREATE TABLE Room
 (
     room_id    INT PRIMARY KEY IDENTITY,
     room_type  VARCHAR(100) NOT NULL, --(Single, Double)
-    location   INT
-    patient_id int,
-    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id),
+    patient_id INT,
+    nurse_id INT,
+    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id)ON DELETE CASCADE ,
+    FOREIGN KEY (nurse_id) REFERENCES Nurse (nurse_id),
 );
 
 CREATE TABLE PatientDiagnosis
@@ -99,7 +100,7 @@ CREATE TABLE PatientDiagnosis
     doctor_id    INT,
     diagnosis_id INT,
     PRIMARY KEY (patient_id, doctor_id), -- Composite primary key
-    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id),
+    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id) ,
     FOREIGN KEY (doctor_id) REFERENCES Doctor (doctor_id),
     FOREIGN KEY (diagnosis_id) REFERENCES Diagnosis (diagnosis_id) ON DELETE CASCADE
 );
@@ -109,10 +110,10 @@ CREATE TABLE PatientMedication
     patient_id    INT,
     medication_id INT,
     Dosage        VARCHAR(50),               -- Assuming Dosage includes both amount and frequency
-    StartDate     var char(100),
-    EndDate       var char(100),
+    StartDate     VARCHAR(100),
+    EndDate       VARCHAR(100),
     PRIMARY KEY (patient_id, medication_id), -- Composite primary key
-    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id),
+    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id) ON DELETE CASCADE,
     FOREIGN KEY (medication_id) REFERENCES Medication (medication_id) ON DELETE CASCADE
 );
 
@@ -324,7 +325,7 @@ VALUES
 ('2024-08-05', 23459, 'Hypothyroidism', 20, 20);
 
 
-INSERT INTO Room (room_type,location,patient_id)
+INSERT INTO Room (room_type, patient_id, nurse_id)
 VALUES
 ('Single', 1, 1),
 ('Double', 2, 2),
