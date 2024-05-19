@@ -57,7 +57,7 @@ CREATE TABLE Appointment
 (
     appointment_id   INT PRIMARY KEY IDENTITY,
     appointment_time TIME,
-    appointment_date DATE,
+    appointment_date var char(100),
     patient_id       INT,
     doctor_id        INT,
     reason_for_visit VARCHAR(30),
@@ -109,8 +109,8 @@ CREATE TABLE PatientMedication
     patient_id    INT,
     medication_id INT,
     Dosage        VARCHAR(50),               -- Assuming Dosage includes both amount and frequency
-    StartDate     DATE,
-    EndDate       DATE,
+    StartDate     varchar(100),
+    EndDate       varchar(100),
     PRIMARY KEY (patient_id, medication_id), -- Composite primary key
     FOREIGN KEY (patient_id) REFERENCES Patient (patient_id),
     FOREIGN KEY (medication_id) REFERENCES Medication (medication_id) ON DELETE CASCADE
