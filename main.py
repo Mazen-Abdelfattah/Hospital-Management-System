@@ -1,4 +1,5 @@
-import pyodbc as odbc # pip install pyodbc     #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+import \
+    pyodbc as odbc  # pip install pyodbc     #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 import sys
 import bcrypt
 from dateutil import parser
@@ -6,7 +7,7 @@ from datetime import datetime
 from datetime import date
 
 DRIVER_NAME = 'SQL Server'
-SERVER_NAME = 'LAPTOP-7R329VJ2'
+SERVER_NAME = 'DESKTOP-VMKA1K4'
 DATABASE_NAME = 'HospitalManagementSystem'
 
 # Define your connection string
@@ -29,11 +30,8 @@ except odbc.InterfaceError as e:
     sys.exit()
 
 
-
-
 def verify_password(stored_password, input_password):
     return stored_password == input_password
-
 
 
 def add_admin():
@@ -41,7 +39,7 @@ def add_admin():
     username = input("Enter username: ")
     password = input("Enter password: ")
     name = input("Enter name: ")
-    
+
     query = "INSERT INTO Admin (username, password, name) VALUES (?, ?, ?)"
     cursor.execute(query, (username, password, name))
     conn.commit()
@@ -52,7 +50,7 @@ def admin_login():
     print("Admin Login:")
     username = input("Enter username: ")
     password = input("Enter password: ")
-    
+
     query = "SELECT password FROM Admin WHERE username = ?"
     cursor.execute(query, (username,))
     result = cursor.fetchone()
@@ -90,12 +88,12 @@ def add_patient():
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """
     cursor.execute(insert_query, (name, gender, date_of_birth, address, phone_number,
-                                    emergency_contact_name, emergency_contact_phone, insurance_information))
+                                  emergency_contact_name, emergency_contact_phone, insurance_information))
     conn.commit()
     print("Patient added successfully.")
 
 
-def admin_actions(): #Habiba 
+def admin_actions():  # Habiba
     while True:
         print("\nAdmin's Actions:")
         print("1. Sign up as a new Admin")
@@ -103,9 +101,9 @@ def admin_actions(): #Habiba
         print("3. Update a users's details")
         print("4. Add a Patient")
         print("5. Close the application")
-        
+
         choice = input("Enter your choice: ")
-        
+
         if choice == '1':
             add_admin()
         elif choice == '2':
@@ -121,11 +119,10 @@ def admin_actions(): #Habiba
             print("Invalid choice. Please try again.")
 
 
-
 def Check_valid_doc_id():
-    id =input('Please enter your id: ')
+    id = input('Please enter your id: ')
     id = int(id)
-    flag=False
+    flag = False
     cursor.execute('select doctor_id from Doctor ')
     row = cursor.fetchone()
     while row:
@@ -133,11 +130,12 @@ def Check_valid_doc_id():
             flag = True
             break
         row = cursor.fetchone()
-    if not flag :
+    if not flag:
         print("Wrong id, Please try again:()")
         return False
     else:
         return id
+
 
 def doctor_actions():
     while True:
@@ -149,7 +147,8 @@ def doctor_actions():
         print("5. Assign a assign_medicine for Patient")
         print("6. Show appointments")
         print("7. Show medical history for specific patient ")
-        print("8. Close the application")
+        print("8. Generate a patient Report")
+        print("9. Close the application")
 
         choice = input("Enter your choice: ")
         if choice == '1':
@@ -162,32 +161,32 @@ def doctor_actions():
             cursor.execute('INSERT INTO Doctor (name, department, Specialty, years_of_experience) VALUES (?, ?, ?, ?)',
                            (name, dep, spe, yex))
             conn.commit()  # Commit the transaction after the loop
-            break  
-        elif choice =='2':
+            break
+        elif choice == '2':
             while True:
-                id =input('Please enter your id: ')
+                id = input('Please enter your id: ')
                 id = int(id)
-                flag=False
+                flag = False
                 cursor.execute('select doctor_id from Doctor')
                 row = cursor.fetchone()
                 while row:
                     if row[0] == id:
-                        cursor.execute('select name from Doctor where doctor_id = ?',(id,))
-                        result=cursor.fetchone()
-                        print("Welcome back "+result[0])
+                        cursor.execute('select name from Doctor where doctor_id = ?', (id,))
+                        result = cursor.fetchone()
+                        print("Welcome back " + result[0])
                         flag = True
                         break
                     row = cursor.fetchone()
-                if not flag :
+                if not flag:
                     print("Wrong id, Please try again:()")
                 else:
                     break
             break
-        elif choice =='3':
+        elif choice == '3':
             while True:
-                id =input('Please enter your id: ')
+                id = input('Please enter your id: ')
                 id = int(id)
-                flag=False
+                flag = False
                 cursor.execute('select doctor_id from Doctor')
                 row = cursor.fetchone()
                 while row:
@@ -197,57 +196,58 @@ def doctor_actions():
                             print("2. Update department ")
                             print("3. Update specialty ")
                             print("4. Update years_of_experience ")
-                            print ("5. Exit")
-                            c= input("Please enter yor choice 1 to 5: ")
+                            print("5. Exit")
+                            c = input("Please enter yor choice 1 to 5: ")
                             if c == '1':
-                                n=input("please enter the new name: ")
-                                cursor.execute('update Doctor set name = ? where doctor_id=?',(n,id,))
-                                conn.commit() 
+                                n = input("please enter the new name: ")
+                                cursor.execute('update Doctor set name = ? where doctor_id=?', (n, id,))
+                                conn.commit()
                                 print("Name updated successfully.")
-                                flag=True
+                                flag = True
                                 break
-                            elif c=='2':
-                                d=input("please enter the new department: ")
-                                cursor.execute('update Doctor set department = ? where doctor_id=?',(d,id,))
-                                conn.commit() 
+                            elif c == '2':
+                                d = input("please enter the new department: ")
+                                cursor.execute('update Doctor set department = ? where doctor_id=?', (d, id,))
+                                conn.commit()
                                 print("Department updated successfully.")
-                                flag=True
+                                flag = True
                                 break
-                            elif c=='3':
-                                s=input("please enter the new specialty: ")
-                                cursor.execute('update Doctor set specialty = ? where doctor_id=?',(s,id,))
-                                conn.commit() 
+                            elif c == '3':
+                                s = input("please enter the new specialty: ")
+                                cursor.execute('update Doctor set specialty = ? where doctor_id=?', (s, id,))
+                                conn.commit()
                                 print("Specialty updated successfully.")
-                                flag=True
+                                flag = True
                                 break
-                            elif c=='4':
+                            elif c == '4':
                                 while True:
-                                    y=input("please enter update year experience: ")
-                                    y=int(y)
-                                    if y<=50:
-                                        cursor.execute('update Doctor set years_of_experience = ? where doctor_id=?',(y,id,))
-                                        conn.commit() 
+                                    y = input("please enter update year experience: ")
+                                    y = int(y)
+                                    if y <= 50:
+                                        cursor.execute('update Doctor set years_of_experience = ? where doctor_id=?',
+                                                       (y, id,))
+                                        conn.commit()
                                         print("Year of updated successfully.")
-                                        flag=True
+                                        flag = True
                                         break
                                     else:
                                         print("Please select year experience from 0 to 50")
                                 break
-                            elif c=='5':
-                                flag=True
+                            elif c == '5':
+                                flag = True
                                 break
                             else:
                                 print("Please try again!")
                         break
                     row = cursor.fetchone()
 
-                if not flag :
+                if not flag:
                     print("Something wrong, Please try again:()")
                 else:
                     break
             break
         elif choice == '4':
-            flag =False
+            flag = False
             while True:
                 name = input("Enter Medicien's name: ")
                 des = input("Enter Medicien's description: ")
@@ -255,29 +255,29 @@ def doctor_actions():
                 cursor.execute('select name from Medication')
                 row = cursor.fetchone()
                 while row:
-                    if(row[0].lower()==name.lower()):
-                        flag =True
-                        break  
+                    if (row[0].lower() == name.lower()):
+                        flag = True
+                        break
                     row = cursor.fetchone()
-                if not flag :
+                if not flag:
                     cursor.execute('INSERT INTO Medication (name, description, dosage) VALUES (?, ?, ?)',
-                            (name, des, dos))
-                    conn.commit() 
-                    print ("Medcien add successfully")
+                                   (name, des, dos))
+                    conn.commit()
+                    print("Medcien add successfully")
                     break
                 else:
                     print("This medcien is already found!")
             break
         elif choice == '5':
-            pid=input ("Please enter patient id: ")
-            pid=int(pid)
-            mid=input ("Please enter medication id: ")
-            mid=int(mid)
+            pid = input("Please enter patient id: ")
+            pid = int(pid)
+            mid = input("Please enter medication id: ")
+            mid = int(mid)
             enddate = input("Enter a end date (YYYY-MM-DD): ")
             startdate = datetime.today().date()
-            d=input("please enter dosage: ")
+            d = input("please enter dosage: ")
             while True:
-                flag=False
+                flag = False
                 cursor.execute('select patient_id from Patient')
                 row = cursor.fetchone()
                 while row:
@@ -285,14 +285,14 @@ def doctor_actions():
                         flag = True
                         break
                     row = cursor.fetchone()
-                if not flag :
+                if not flag:
                     print("Wrong patient id, Please try again:()")
                 else:
                     break
-                pid=input ("Please enter patient id: ")
-                pid=int(pid)
+                pid = input("Please enter patient id: ")
+                pid = int(pid)
             while True:
-                flag=False
+                flag = False
                 cursor.execute('select medication_id from Medication')
                 row = cursor.fetchone()
                 while row:
@@ -300,60 +300,63 @@ def doctor_actions():
                         flag = True
                         break
                     row = cursor.fetchone()
-                if not flag :
+                if not flag:
                     print("Wrong medication id, Please try again:()")
-                    mid=input ("Please enter medication id: ")
-                    mid=int(mid)
+                    mid = input("Please enter medication id: ")
+                    mid = int(mid)
                 else:
                     break
             while True:
                 try:
                     date_obj = datetime.strptime(enddate, '%Y-%m-%d').date()
-                    if (startdate>date_obj):
-                        print ("entered date is in the past please try again")
+                    if (startdate > date_obj):
+                        print("entered date is in the past please try again")
                     else:
                         break
                 except ValueError:
                     print("Invalid date format. Please enter the date in the format YYYY-MM-DD.")
                 enddate = input("Enter a date (YYYY-MM-DD): ")
 
-            data = (pid,mid,d,startdate.strftime('%Y-%m-%d'),enddate)
-            cursor.execute('INSERT INTO PatientMedication (patient_id, medication_id, Dosage, StartDate, EndDate) VALUES (?, ?, ?, ?, ?)',
-                            data)
+            data = (pid, mid, d, startdate.strftime('%Y-%m-%d'), enddate)
+            cursor.execute(
+                'INSERT INTO PatientMedication (patient_id, medication_id, Dosage, StartDate, EndDate) VALUES (?, ?, ?, ?, ?)',
+                data)
             conn.commit()
             print("medcien assigned successfully")
             break
-        elif choice=='6':
+        elif choice == '6':
             while True:
                 print("1. show all appointment ")
                 print("2. show appointment for specific patient ")
                 print("3. show appointment for specific date ")
-                print ("4. Exit")
-                c= input("Please enter yor choice 1 to 4: ")
-                if c=='1':
+                print("4. Exit")
+                c = input("Please enter yor choice 1 to 4: ")
+                if c == '1':
                     while True:
-                        id=Check_valid_doc_id()
+                        id = Check_valid_doc_id()
                         if id:
                             break
-                    cursor.execute('select appointment_time, appointment_date, patient_id, reason_for_visit  from Appointment where doctor_id=? ', (id,))
+                    cursor.execute(
+                        'select appointment_time, appointment_date, patient_id, reason_for_visit  from Appointment where doctor_id=? ',
+                        (id,))
                     row = cursor.fetchone()
                     flag = False
                     while row:
-                            print(row)
-                            row = cursor.fetchone()
-                            flag= True
+                        print(row)
+                        row = cursor.fetchone()
+                        flag = True
                     if not flag:
                         print("You don't have any appointment")
                     break
-                elif c=='2':
+                elif c == '2':
                     while True:
-                        id=Check_valid_doc_id()
+                        id = Check_valid_doc_id()
                         if id:
                             break
                     while True:
-                        pid =input('Please enter your Patient id: ')
+                        pid = input('Please enter your Patient id: ')
                         pid = int(pid)
-                        flag=False
+                        flag = False
                         cursor.execute('select patient_id from Patient ')
                         row = cursor.fetchone()
                         while row:
@@ -361,23 +364,25 @@ def doctor_actions():
                                 flag = True
                                 break
                             row = cursor.fetchone()
-                        if not flag :
+                        if not flag:
                             print("Wrong patient id, Please try again:()")
                         else:
                             break
-                    cursor.execute('select appointment_time, appointment_date, reason_for_visit  from Appointment where doctor_id=? and patient_id=? ', (id,pid))
+                    cursor.execute(
+                        'select appointment_time, appointment_date, reason_for_visit  from Appointment where doctor_id=? and patient_id=? ',
+                        (id, pid))
                     row = cursor.fetchone()
                     flag = False
                     while row:
-                            print(row)
-                            row = cursor.fetchone()
-                            flag= True
+                        print(row)
+                        row = cursor.fetchone()
+                        flag = True
                     if not flag:
                         print("You don't have any appointment with this patient")
                     break
-                elif c=='3':
+                elif c == '3':
                     while True:
-                        id=Check_valid_doc_id()
+                        id = Check_valid_doc_id()
                         if id:
                             break
                     while True:
@@ -387,26 +392,28 @@ def doctor_actions():
                             break
                         except ValueError:
                             print("Invalid date format. Please enter the date in the format YYYY-MM-DD.")
-                    cursor.execute('select appointment_time, patient_id, reason_for_visit  from Appointment where doctor_id=? and appointment_date=? ', (id,date))
+                    cursor.execute(
+                        'select appointment_time, patient_id, reason_for_visit  from Appointment where doctor_id=? and appointment_date=? ',
+                        (id, date))
                     row = cursor.fetchone()
                     flag = False
                     while row:
-                            print(row)
-                            row = cursor.fetchone()
-                            flag= True
+                        print(row)
+                        row = cursor.fetchone()
+                        flag = True
                     if not flag:
                         print("You don't have any appointment in this day")
                     break
-                elif c=='4':
+                elif c == '4':
                     break
                 else:
                     print("Invalid choice please try again")
 
             break
-        elif choice=='7':
-            pid=input("Please enter patient id: ")
+        elif choice == '7':
+            pid = input("Please enter patient id: ")
             pid = int(pid)
-            flag=False
+            flag = False
             cursor.execute('select patient_id from Patient ')
             row = cursor.fetchone()
             while True:
@@ -415,68 +422,106 @@ def doctor_actions():
                         flag = True
                         break
                     row = cursor.fetchone()
-                if not flag :
+                if not flag:
                     print("Wrong id, Please try again:()")
                 else:
                     break
 
-            cursor.execute('select PatientMedication.*,Diagnosis.Description,Diagnosis.DiagnosisDate from PatientMedication,Diagnosis where PatientMedication.patient_id=Diagnosis.patient_id and Diagnosis.patient_id=?',(pid,))
+            cursor.execute(
+                'select PatientMedication.*,Diagnosis.Description,Diagnosis.DiagnosisDate from PatientMedication,Diagnosis where PatientMedication.patient_id=Diagnosis.patient_id and Diagnosis.patient_id=?',
+                (pid,))
             row = cursor.fetchone()
             while row:
                 print(row)
-                row=cursor.fetchone()
-            break        
-        elif choice =='8':
+                row = cursor.fetchone()
+            break
+        elif choice == '8':
+            id = input("enter the patient id to generate his report: ")
+            while True:
+                cursor.execute(f"SELECT * FROM Patient WHERE patient_id = ?", (id,))
+                if cursor.fetchone() != None:
+                    break
+                id = input("there is no patient with the provided id.\nenter the patient id to generate his report: ")
+            cursor.execute(f"SELECT * FROM Patient WHERE patient_id = ?", (id,))
+            dataI = cursor.fetchall()
+            cursor.execute(f"select name , description, StartDate ,EndDate from Medication ,PatientMedication where "
+                           f"Medication.medication_id=PatientMedication.medication_id and patient_id=?", (id,))
+            data2 = cursor.fetchall()
+            cursor.execute(f"select DiagnosisDate, Description from Diagnosis,PatientDiagnosis "
+                           f"where Diagnosis.diagnosis_id=PatientDiagnosis.diagnosis_id and Diagnosis.patient_id=?",
+                           (id,))
+            data3 = cursor.fetchall()
+            cursor.execute(f"select room_id,room_type,location from Room where patient_id=?", (id,))
+            r = cursor.fetchall()
+            with open('report_for_ID_' + id + '.txt', 'w') as file:
+                file.write("\nPatient Data:\n")
+                file.write(str(dataI) + "\n")
+                file.write("\nPatient Medication:\n")
+                for x in data2:
+                    file.write(str(x) + "\n")
+                file.write("\nPatient Diagnosis:\n")
+                for x in data3:
+                    file.write(str(x) + "\n")
+
+                file.write("\nPatient Room Details:\n" + str(r))
+
+        elif choice == '9':
             break
         else:
             print('Invalid,Please select number from 1 to 8')
 
 
-
 def patient_actions():  # Salma
-    print("Choose:")
-    print("1. Sign UP")
-    print("2. Log IN")
-    print("3. Exit")
 
     while True:
+        print("Choose:")
+        print("1. Sign UP")
+        print("2. Log IN")
+        print("3. Exit")
         ch = input("Enter your choice: ")
         if ch == '1':
             n = input("Enter your Full Name: ")
             g = input("Enter your Gender( F || M ): ")
             while g != 'F' and g != 'M':
                 g = input("Enter your Gender( F || M ): ")
-
-            today = datetime.now().strftime('%y-%m-%d')
             d = input("Enter your Date of birth in this format YYYY-MM-DD: ")
             while True:
                 try:
-                    vaild = parser.parse(d)
-                    if today < d:
+                    valid = datetime.strptime(d, "%Y-%m-%d").date()
+                    today = datetime.now().date()
+                    if today > valid:
+                        print("valid date")
                         break
+                    else:
+                        print("invalid or date in future. please try again.")
                 except ValueError:
-                    print("invalid format ")
-                    d = input("Enter your Date of birth in this format YYYY-MM-DD: ")
+                    print("invalid format.")
+                d = input("Enter your Date of birth in this format YYYY-MM-DD: ")
 
             a = input("Enter your Address: ")
             p = input("Enter your Phone Number: ")
             while len(p) != 7:
                 p = input("Enter your Phone Number(7 numbers): ")
+            cursor.execute(f"SELECT phone_number FROM Patient WHERE phone_number = '{p}' ")
+            if cursor.fetchone() != None:
+                print("you have a signed up already with that phone")
+                break
             e1 = input("Enter your Emergency contact name): ")
             e2 = input("Enter your Emergency contact Phone Number: ")
             while len(p) != 7:
                 p = input("Enter your Phone Number(7 numbers): ")
             i = input("Enter your insurance information if you don't have insurance write 'no': ")
             data = (n, g, d, a, p, e1, e2, i)
-            cursor.execute(f"INSERT INTO Patient(name, gender, date_of_birth, address, phone_number, emergency_contact_name, emergency_contact_phone, insurance_information) values(?, ?, ?, ?, ?, ?, ?, ?)",data)
-            ch = input("to log in type 2: \nto Exit type 3: ")
+            cursor.execute(
+                f"INSERT INTO Patient(name, gender, date_of_birth, address, phone_number, emergency_contact_name, emergency_contact_phone, insurance_information) values(?, ?, ?, ?, ?, ?, ?, ?)",
+                data)
+
         elif ch == '2':
             p = input("Enter your phone number to log in: ")
             cursor.execute(f"SELECT phone_number FROM Patient WHERE phone_number = '{p}' ")
             while cursor.fetchone() == None:
-                print(cursor.fetchone())
                 p = input("please Enter your phone number that you hav signed up with: ")
-                cursor.execute(f"SELECT phone_number FROM Patient WHERE phone_number = ?",(p, ))
+                cursor.execute(f"SELECT phone_number FROM Patient WHERE phone_number = ?", (p,))
             break
         elif ch == '3':
             print("Exiting program.")
@@ -484,8 +529,9 @@ def patient_actions():  # Salma
             sys.exit()
         else:
             print("invalid value")
+            break
     while True:
-        cursor.execute(f"SELECT patient_id FROM Patient WHERE phone_number = ?", (p, ))
+        cursor.execute(f"SELECT patient_id FROM Patient WHERE phone_number = ?", (p,))
         login_id = cursor.fetchone()
         print("welcome user with id: " + str(login_id[0]))
         print("\nPatient's Actions:")
@@ -498,20 +544,24 @@ def patient_actions():  # Salma
         if choice == '1':
 
             di = input("Enter the Doctor ID: ")
-            cursor.execute(f"SELECT doctor_id FROM Doctor WHERE doctor_id = ?", (di, ))
+            cursor.execute(f"SELECT doctor_id FROM Doctor WHERE doctor_id = ?", (di,))
             while cursor.fetchone() == None:
-                print(cursor.fetchone())
                 di = input("Please Enter Valid Doctor ID: ")
-                cursor.execute(f"SELECT doctor_id FROM Doctor WHERE doctor_id = ?", (di, ))
+                cursor.execute(f"SELECT doctor_id FROM Doctor WHERE doctor_id = ?", (di,))
 
             d = input("Enter your Date of Appointment you want in this format YYYY-MM-DD: ")
             while True:
                 try:
-                    valid = parser.parse(d)
-                    break
+                    valid = datetime.strptime(d, "%Y-%m-%d").date()
+                    today = datetime.now().date()
+                    if today <= valid:
+                        print("valid date")
+                        break
+                    else:
+                        print("invalid or date in past. please try again.")
                 except ValueError:
-                    print("invalid format ")
-                    d = input("Enter your Date of Appointment you want in this format YYYY-MM-DD: ")
+                    print("invalid format.")
+                d = input("Enter your Date of Appointment you want in this format YYYY-MM-DD: ")
 
             print("Enter the time of appointment you want we are available in those slots:\n")
             print("1. at 09:00\n2. at 10:00\n3. at 11:00\n")
@@ -543,14 +593,17 @@ def patient_actions():  # Salma
                 slot = '17:00'
             elif t == '9':
                 slot = '18:00'
-            cursor.execute(f"SELECT doctor_id FROM Appointment WHERE doctor_id = '{di}' and appointment_time= '{slot}' and appointment_date='{d}' ")
+            cursor.execute(
+                f"SELECT doctor_id FROM Appointment WHERE doctor_id = '{di}' and appointment_time= '{slot}' and appointment_date='{d}' ")
             while cursor.fetchone() != None:
                 print(cursor.fetchone())
-                di = input("Please Enter another Doctor ID the doctor you chose is not available in the date and time you wont: \nif you wnat to exit Enter 0")
+                di = input(
+                    "Please Enter another Doctor ID the doctor you chose is not available in the date and time you wont: \nif you wnat to exit Enter 0")
                 if di == '0':
                     cursor.commit()
                     sys.exit()
-                cursor.execute(f"SELECT doctor_id FROM Appointment WHERE doctor_id = '{di}' and appointment_time= '{slot}' and appointment_date='{d}' ")
+                cursor.execute(
+                    f"SELECT doctor_id FROM Appointment WHERE doctor_id = '{di}' and appointment_time= '{slot}' and appointment_date='{d}' ")
 
             i = login_id
             r = input("Enter the reason for visit")
@@ -560,34 +613,37 @@ def patient_actions():  # Salma
             print(i[0])
             print(di)
             print(r)
-            cursor.execute(f"INSERT INTO Appointment (appointment_time, appointment_date, patient_id, doctor_id, reason_for_visit) VALUES (?, ?, ?, ?, ?)", data)
+            cursor.execute(
+                f"INSERT INTO Appointment (appointment_time, appointment_date, patient_id, doctor_id, reason_for_visit) VALUES (?, ?, ?, ?, ?)",
+                data)
 
         elif choice == '2':
             di = input("Enter the Doctor ID: ")
-            cursor.execute(f"SELECT doctor_id FROM Doctor WHERE doctor_id = ?", (di, ))
+            cursor.execute(f"SELECT doctor_id FROM Doctor WHERE doctor_id = ?", (di,))
             while cursor.fetchone() == None:
                 print(cursor.fetchone())
                 di = input("Please Enter Valid Doctor ID: ")
-                cursor.execute(f"SELECT doctor_id FROM Doctor WHERE doctor_id = ?", (di, ))
+                cursor.execute(f"SELECT doctor_id FROM Doctor WHERE doctor_id = ?", (di,))
             while True:
                 d = input("Enter your Date of Appointment you want to cancel in this format YYYY-MM-DD: ")
                 check = True
                 while check:
                     try:
-                        valid = parser.parse(d)
+                        parser.parse(d)
                         check = False
                     except ValueError:
                         print("invalid format ")
-                        d = input("Enter your Date of Appointment you want in this format YYYY-MM-DD: ")
+                        d = input("Enter your Date of Appointment you want to cancel in this format YYYY-MM-DD: ")
                 cursor.execute(f"SELECT doctor_id FROM Appointment WHERE appointment_date = '{d}'"
-                                f" and patient_id='{login_id[0]}' ")
+                               f" and patient_id='{login_id[0]}' ")
                 check = cursor.fetchone()
                 if check != None:
                     break
 
             cursor.execute(f"DELETE FROM Appointment WHERE doctor_id = '{di}' and patient_id = '{login_id[0]}"
-                            f"' and appointment_date = '{d}'")
+                           f"' and appointment_date = '{d}'")
             print("\nyour appointment has been canceled successfully\n")
+
         elif choice == '3':
             while True:
                 roomType = input("Do you want \n1. Single Room\n2. Double Room \n")
@@ -599,15 +655,16 @@ def patient_actions():  # Salma
                     print("invalid data")
                     continue
                 print(roomType)
-                cursor.execute(f"SELECT room_id, location FROM Room WHERE room_type ='{roomType}' and patient_id is null ")
-                roomId=cursor.fetchone()
+                cursor.execute(
+                    f"SELECT room_id, location FROM Room WHERE room_type ='{roomType}' and patient_id is null ")
+                roomId = cursor.fetchone()
                 print(roomId)
                 if roomId == None:
                     print("There are no available rooms with your selection, so please choose another.")
                 else:
                     cursor.execute(f"UPDATE Room  SET patient_id ='{login_id[0]}' WHERE room_id='{roomId[0]}'")
                     print("Your room is assigned here Room ID ")
-                    print(roomId[0] )
+                    print(roomId[0])
                     print("and Location in the floor number ")
                     print(roomId[1])
                     break
@@ -619,8 +676,7 @@ def patient_actions():  # Salma
             print("Invalid choice. Please try again.")
 
 
-
-def nurse_actions(): #Youssef
+def nurse_actions():  # Youssef
     while True:
         print("\nNurse's Actions:")
         print("1. Show all rooms")
@@ -643,9 +699,9 @@ def nurse_actions(): #Youssef
 def all_rooms():
     cursor.execute('SELECT room_id, room_type FROM Room')
     rooms = cursor.fetchall()
-    
+
     print("\nAll Rooms:")
-    for room_id, room_type in rooms:  
+    for room_id, room_type in rooms:
         print(f"Room {room_id}: {room_type}")
     conn.close()
 
@@ -656,13 +712,13 @@ def specific_rooms():
         SELECT room_id, room_type FROM Room WHERE room_id = ?
     ''', (criteria,))
     rooms = cursor.fetchall()
-    
-    if not rooms: 
+
+    if not rooms:
         cursor.execute('''
             SELECT room_id, room_type FROM Room WHERE room_type = ?
         ''', (criteria,))
         rooms = cursor.fetchall()
-    
+
     print("\nRooms matching criteria:")
     for room_id, room_type in rooms:
         print(f"Room {room_id}: {room_type}")
@@ -693,6 +749,7 @@ def main():
             break
         else:
             print("Invalid choice. Please try again.")
+
 
 if __name__ == "__main__":
     main()
