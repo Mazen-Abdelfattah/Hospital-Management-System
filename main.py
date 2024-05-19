@@ -57,7 +57,8 @@ def admin_login():
     cursor.execute(query, (username,))
     result = cursor.fetchone()
     if result and result[0] == password:
-        print("Login successful.")
+        print("Login successful. Displaying options...")
+        show_admin_options()
     else:
         print("Invalid username or password.")
 
@@ -95,26 +96,60 @@ def add_patient():
     print("Patient added successfully.")
 
 
-def admin_actions(): #Habiba 
+def delete_patient():
+    print("\nDelete a patient:")
+    phone_number = input("Enter patient's phone number: ")
+    
+    cursor.execute("SELECT phone_number FROM Patient WHERE phone_number = ?", (phone_number,))
+    result = cursor.fetchone()
+    
+    while result is None:
+        print("Invalid phone number. Please try again.")
+        phone_number = input("Please enter a valid phone number: ")
+        cursor.execute("SELECT phone_number FROM Patient WHERE phone_number = ?", (phone_number,))
+        result = cursor.fetchone()
+    
+    delete_query = "DELETE FROM Patient WHERE phone_number = ?"
+    cursor.execute(delete_query, (phone_number,))
+    conn.commit()
+    
+    print("\nThis patient has been deleted successfully\n")
+
+
+def show_admin_options():
     while True:
         print("\nAdmin's Actions:")
-        print("1. Sign up as a new Admin")
-        print("2. Login")
-        print("3. Update a users's details")
-        print("4. Add a Patient")
-        print("5. Close the application")
-        
+        print("1. Update a user's details")
+        print("2. Add a Patient")
+        print("3. Close the application")
+
         choice = input("Enter your choice: ")
-        
+
+        if choice == '1':
+            update_user_details()
+        elif choice == '2':
+            add_patient()
+        elif choice == '3':
+            print("Closing the application.")
+            sys.exit()
+        else:
+            print("Invalid choice. Please try again.")
+
+
+def admin_actions():
+    while True:
+        print("\nAdmin's Actions:")
+        print("1. Sign up")
+        print("2. Login")
+        print("3. Close the application")
+
+        choice = input("Enter your choice: ")
+
         if choice == '1':
             add_admin()
         elif choice == '2':
             admin_login()
         elif choice == '3':
-            update_user_details()
-        elif choice == '4':
-            add_patient()
-        elif choice == '5':
             print("Closing the application.")
             sys.exit()
         else:
@@ -139,6 +174,10 @@ def Check_valid_doc_id():
     else:
         return id
 
+
+
+
+
 def doctor_actions():
     while True:
         print("\nDoctor's Actions:")
@@ -160,7 +199,7 @@ def doctor_actions():
 
             # Using parameterized query to prevent SQL injection
             cursor.execute('INSERT INTO Doctor (name, department, Specialty, years_of_experience) VALUES (?, ?, ?, ?)',
-                           (name, dep, spe, yex))
+                            (name, dep, spe, yex))
             conn.commit()  # Commit the transaction after the loop
             break  
         elif choice =='2':
@@ -433,7 +472,7 @@ def doctor_actions():
 
 
 
-def patient_actions():  # Salma
+def patient_actions():  
     print("Choose:")
     print("1. Sign UP")
     print("2. Log IN")
@@ -620,7 +659,7 @@ def patient_actions():  # Salma
 
 
 
-def nurse_actions(): #Youssef
+def nurse_actions(): 
     while True:
         print("\nNurse's Actions:")
         print("1. Show all rooms")
