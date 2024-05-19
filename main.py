@@ -1,36 +1,126 @@
-import pyodbc  # pip install pypyodbc #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+import pyodbc as odbc # pip install pyodbc     #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 import sys
+import bcrypt
 from dateutil import parser
-from datetime import datetime,date
+from datetime import datetime, date
 
-conn = pyodbc.connect('DRIVER={SQL Server};Server=YARA\\SQLEXPRESS;Database=HospitalManagementSystem;')
-cursor = conn.cursor()
-# def admin_actions(): #Habiba
-#     while True:
-#         print("\nAdmin's Actions:")
-#         print("1. Sign up as a new Admin")
-#         print("2. Login")
-#         print("3. Update a users's details")
-#         print("4. Add a Patient")
-#         print("5. Close the application")
-#         choice = input("Enter your choice: ")
-#
-#         if choice == '1':
-#             add_admin()
-#         elif choice == '2':
-#             admin_login()
-#         elif choice == '3':
-#             update_user_details()
-#         elif choice == '4':
-#             add_patient()
-#         elif choice == '5':
-#             print("Closing the application.")
-#             sys.exit()
-#         else:
-#             print("Invalid choice. Please try again.")
-#
-#
-#
+DRIVER_NAME = 'SQL Server'
+SERVER_NAME = 'LAPTOP-7R329VJ2'
+DATABASE_NAME = 'HospitalManagementSystem'
+
+# Define your connection string
+connection_string = f"""
+    DRIVER={{{DRIVER_NAME}}};
+    SERVER={SERVER_NAME};
+    DATABASE={DATABASE_NAME};
+    Trusted_Connection=yes;
+"""
+
+try:
+    conn = odbc.connect(connection_string)
+    cursor = conn.cursor()
+    print("Connection successful!")
+except odbc.DatabaseError as e:
+    print(f"Database connection error: {e}")
+    sys.exit()
+except odbc.InterfaceError as e:
+    print(f"Interface error: {e}")
+    sys.exit()
+
+
+
+
+def verify_password(stored_password, input_password):
+    return stored_password == input_password
+
+
+
+def add_admin():
+    print("Sign up as a new Admin:")
+    username = input("Enter username: ")
+    password = input("Enter password: ")
+    name = input("Enter name: ")
+    
+    query = "INSERT INTO Admin (username, password, name) VALUES (?, ?, ?)"
+    cursor.execute(query, (username, password, name))
+    conn.commit()
+    print("Admin added successfully.")
+
+
+def admin_login():
+    print("Admin Login:")
+    username = input("Enter username: ")
+    password = input("Enter password: ")
+    
+    query = "SELECT password FROM Admin WHERE username = ?"
+    cursor.execute(query, (username,))
+    result = cursor.fetchone()
+    if result and result[0] == password:
+        print("Login successful.")
+    else:
+        print("Invalid username or password.")
+
+
+def update_user_details():
+    print("Update a patient's details:")
+    patient_id = input("Enter patient ID: ")
+    new_name = input("Enter new name: ")
+
+    update_query = "UPDATE Patient SET name = ? WHERE patient_id = ?"
+    cursor.execute(update_query, (new_name, patient_id))
+    conn.commit()
+    print("Patient details updated successfully.")
+
+
+def add_patient():
+    print("\nAdd a patient:")
+    name = input("Enter patient's name: ")
+    gender = input("Enter patient's gender (M/F): ")
+    date_of_birth = input("Enter patient's date of birth (YYYY-MM-DD): ")
+    address = input("Enter patient's address: ")
+    phone_number = input("Enter patient's phone number: ")
+    emergency_contact_name = input("Enter emergency contact name: ")
+    emergency_contact_phone = input("Enter emergency contact phone number: ")
+    insurance_information = input("Enter insurance information: ")
+
+    insert_query = """
+    INSERT INTO Patient (name, gender, date_of_birth, address, phone_number, emergency_contact_name,
+                            emergency_contact_phone, insurance_information)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    cursor.execute(insert_query, (name, gender, date_of_birth, address, phone_number,
+                                    emergency_contact_name, emergency_contact_phone, insurance_information))
+    conn.commit()
+    print("Patient added successfully.")
+
+
+def admin_actions(): #Habiba 
+    while True:
+        print("\nAdmin's Actions:")
+        print("1. Sign up as a new Admin")
+        print("2. Login")
+        print("3. Update a users's details")
+        print("4. Add a Patient")
+        print("5. Close the application")
+        
+        choice = input("Enter your choice: ")
+        
+        if choice == '1':
+            add_admin()
+        elif choice == '2':
+            admin_login()
+        elif choice == '3':
+            update_user_details()
+        elif choice == '4':
+            add_patient()
+        elif choice == '5':
+            print("Closing the application.")
+            sys.exit()
+        else:
+            print("Invalid choice. Please try again.")
+
+
+
 def Check_valid_doc_id():
     id =input('Please enter your id: ')
     id = int(id)
@@ -59,14 +149,14 @@ def doctor_actions():
         print("6. Show appointments")
         print("7. Show medical history for specific patient ")
         print("8. Close the application")
-        
+
         choice = input("Enter your choice: ")
         if choice == '1':
             name = input("Enter your name: ")
             dep = input("Enter your department: ")
             spe = input("Enter your specialization: ")
             yex = input("Enter your year of experience: ")
-            
+
             # Using parameterized query to prevent SQL injection
             cursor.execute('INSERT INTO Doctor (name, department, Specialty, years_of_experience) VALUES (?, ?, ?, ?)',
                            (name, dep, spe, yex))
@@ -341,6 +431,7 @@ def doctor_actions():
             print('Invalid,Please select number from 1 to 8')
 
 
+
 def patient_actions():  # Salma
     print("Choose:")
     print("1. Sign UP")
@@ -488,13 +579,13 @@ def patient_actions():  # Salma
                         print("invalid format ")
                         d = input("Enter your Date of Appointment you want in this format YYYY-MM-DD: ")
                 cursor.execute(f"SELECT doctor_id FROM Appointment WHERE appointment_date = '{d}'"
-                               f" and patient_id='{login_id[0]}' ")
+                                f" and patient_id='{login_id[0]}' ")
                 check = cursor.fetchone()
                 if check != None:
                     break
 
             cursor.execute(f"DELETE FROM Appointment WHERE doctor_id = '{di}' and patient_id = '{login_id[0]}"
-                           f"' and appointment_date = '{d}'")
+                            f"' and appointment_date = '{d}'")
             print("\nyour appointment has been canceled successfully\n")
         elif choice == '3':
             while True:
@@ -502,7 +593,7 @@ def patient_actions():  # Salma
                 if roomType == '1':
                     roomType = "Single"
                 elif roomType == '2':
-                     roomType = "Double"
+                    roomType = "Double"
                 else:
                     print("invalid data")
                     continue
@@ -513,12 +604,12 @@ def patient_actions():  # Salma
                 if roomId == None:
                     print("There are no available rooms with your selection, so please choose another.")
                 else:
-                   cursor.execute(f"UPDATE Room  SET patient_id ='{login_id[0]}' WHERE room_id='{roomId[0]}'")
-                   print("Your room is assigned here Room ID ")
-                   print(roomId[0] )
-                   print("and Location in the floor number ")
-                   print(roomId[1])
-                   break
+                    cursor.execute(f"UPDATE Room  SET patient_id ='{login_id[0]}' WHERE room_id='{roomId[0]}'")
+                    print("Your room is assigned here Room ID ")
+                    print(roomId[0] )
+                    print("and Location in the floor number ")
+                    print(roomId[1])
+                    break
         elif choice == '4':
             print("Closing the application.")
             cursor.commit()
@@ -528,30 +619,57 @@ def patient_actions():  # Salma
 
 
 
-# def nurse_actions(): #Youssef
-#     while True:
-#         print("\nNurse's Actions:")
-#         print("1. Show all rooms")
-#         print("2. Show rooms with certain criteria (room_id, specefic patient, ...)")
-#         print("3. Close the application.")
-#
-#         choice = input("enter your choice: ")
-#
-#         if choice == '1':
-#             all_rooms()
-#         elif choice == '2':
-#             specific_rooms()
-#         elif choice == '3':
-#             print("Closing the application.")
-#             sys.exit()
-#         else:
-#             print("Invalid choice. Please try again")
-#
-#
+def nurse_actions(): #Youssef
+    while True:
+        print("\nNurse's Actions:")
+        print("1. Show all rooms")
+        print("2. Show rooms with certain criteria (room_id, specefic patient, ...)")
+        print("3. Close the application.")
+        
+        choice = input("enter your choice: ")
+        
+        if choice == '1':
+            all_rooms()
+        elif choice == '2':
+            specific_rooms()
+        elif choice == '3':
+            print("Closing the application.")
+            sys.exit()
+        else:
+            print("Invalid choice. Please try again")
+
+
+def all_rooms():
+    cursor.execute('SELECT room_id, room_type FROM Room')
+    rooms = cursor.fetchall()
+    
+    print("\nAll Rooms:")
+    for room_id, room_type in rooms:  
+        print(f"Room {room_id}: {room_type}")
+    conn.close()
+
+
+def specific_rooms():
+    criteria = input("Enter room number or room type: ")
+    cursor.execute('''
+        SELECT room_id, room_type FROM Room WHERE room_id = ?
+    ''', (criteria,))
+    rooms = cursor.fetchall()
+    
+    if not rooms: 
+        cursor.execute('''
+            SELECT room_id, room_type FROM Room WHERE room_type = ?
+        ''', (criteria,))
+        rooms = cursor.fetchall()
+    
+    print("\nRooms matching criteria:")
+    for room_id, room_type in rooms:
+        print(f"Room {room_id}: {room_type}")
+
 
 def main():
     while True:
-        print("\nWelcome to our hospital Management System!")
+        print("\nWelcome to the Hospital Management System!")
         print("Choose user type:")
         print("1. Admin")
         print("2. Doctor")
@@ -561,23 +679,19 @@ def main():
 
         user_type = input("Enter your choice: ")
 
-        # if user_type == '1':
-        #     admin_actions()
-        if user_type == '2':
+        if user_type == '1':
+            admin_actions()
+        elif user_type == '2':
             doctor_actions()
-        # el
-        if user_type == '3':
+        elif user_type == '3':
             patient_actions()
-        # elif user_type == '4':
-        #     nurse_actions()
-        # elif user_type == '5':
-        #     print("Exiting program.")
-        #     break
+        elif user_type == '4':
+            nurse_actions()
+        elif user_type == '5':
+            print("Exiting program.")
+            break
         else:
             print("Invalid choice. Please try again.")
 
-
 if __name__ == "__main__":
     main()
-
-conn.close()
